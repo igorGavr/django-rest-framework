@@ -9,14 +9,13 @@ from django.forms.models import model_to_dict
 from products.serializers import ProductSerializer
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def api_home(request, *args, **kwargs):
-
-    instance = Product.objects.all().order_by("?").first()
-    date = {}
-    if instance:
-        data = ProductSerializer(instance).data
-    return Response(data)
+    serializer = ProductSerializer(data=request.data)
+    if serializer.is_valid():
+        instance = serializer.save()
+        print(instance)
+        return Response(serializer.data)
 
 
 
